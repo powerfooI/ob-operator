@@ -12,7 +12,7 @@ See the Mulan PSL v2 for more details.
 
 package main
 
-import "github.com/oceanbase/ob-operator/internal/cli"
+import "github.com/oceanbase/ob-operator/internal/cmds/cli"
 
 func main() {
 	cli.Execute()

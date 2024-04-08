@@ -17,7 +17,7 @@ import (
 	"log"
 	"regexp"
 
-	"github.com/oceanbase/ob-operator/internal/cli/helpers"
+	"github.com/oceanbase/ob-operator/internal/cmds/cli/helpers"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"

@@ -40,8 +40,8 @@ type OBTenantResourcePool struct {
 	MaxCPU      int64  `json:"maxCPU"`
 	MinCPU      int64  `json:"minCPU"`
 	MemorySize  int64  `json:"memorySize"`
-	MaxIOPS     int    `json:"maxIOPS"`
-	MinIOPS     int    `json:"minIOPS"`
+	MaxIOPS     int64  `json:"maxIOPS"`
+	MinIOPS     int64  `json:"minIOPS"`
 	IOPSWeight  int    `json:"IOPSWeight"`
 	LogDiskSize int64  `json:"logDiskSize"`
 	UnitNumber  int    `json:"unitNumber"`

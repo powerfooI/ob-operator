@@ -14,7 +14,6 @@ package oceanbase
 
 import (
 	"context"
-	"math"
 
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/types"
@@ -56,12 +55,6 @@ func CreateTenantPool(ctx context.Context, nn param.TenantPoolName, p *param.Ten
 	if err != nil {
 		return nil, err
 	}
-	var maxIops int
-	if p.UnitConfig.MaxIops > math.MaxInt32 {
-		maxIops = math.MaxInt32
-	} else {
-		maxIops = int(p.UnitConfig.MaxIops)
-	}
 
 	for _, zone := range clusterCR.Spec.Topology {
 		if zone.Zone == nn.ZoneName {
@@ -77,8 +70,8 @@ func CreateTenantPool(ctx context.Context, nn param.TenantPoolName, p *param.Ten
 					MaxCPU:      cpuCount,
 					MemorySize:  memorySize,
 					MinCPU:      cpuCount,
-					MaxIops:     maxIops,
-					MinIops:     maxIops,
+					MaxIops:     p.UnitConfig.MaxIops,
+					MinIops:     p.UnitConfig.MaxIops,
 					IopsWeight:  p.UnitConfig.IopsWeight,
 					LogDiskSize: logDiskSize,
 				},
@@ -134,17 +127,6 @@ func PatchTenantPool(ctx context.Context, nn param.TenantPoolName, p *param.Tena
 	if err != nil {
 		return nil, err
 	}
-	var maxIops, minIops int
-	if p.UnitConfig.MaxIops > math.MaxInt32 {
-		maxIops = math.MaxInt32
-	} else {
-		maxIops = int(p.UnitConfig.MaxIops)
-	}
-	if p.UnitConfig.MinIops > math.MaxInt32 {
-		minIops = math.MaxInt32
-	} else {
-		minIops = int(p.UnitConfig.MinIops)
-	}
 
 	for i, pool := range tenantCR.Spec.Pools {
 		if pool.Zone == nn.ZoneName {
@@ -161,10 +143,10 @@ func PatchTenantPool(ctx context.Context, nn param.TenantPoolName, p *param.Tena
 					tenantCR.Spec.Pools[i].UnitConfig.LogDiskSize = logDiskSize
 				}
 				if p.UnitConfig.MaxIops != 0 {
-					tenantCR.Spec.Pools[i].UnitConfig.MaxIops = maxIops
+					tenantCR.Spec.Pools[i].UnitConfig.MaxIops = p.UnitConfig.MaxIops
 				}
 				if p.UnitConfig.MinIops != 0 {
-					tenantCR.Spec.Pools[i].UnitConfig.MinIops = minIops
+					tenantCR.Spec.Pools[i].UnitConfig.MinIops = p.UnitConfig.MinIops
 				}
 				if p.UnitConfig.IopsWeight != 0 {
 					tenantCR.Spec.Pools[i].UnitConfig.IopsWeight = p.UnitConfig.IopsWeight

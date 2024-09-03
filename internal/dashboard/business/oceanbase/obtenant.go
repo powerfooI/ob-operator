@@ -15,7 +15,6 @@ package oceanbase
 import (
 	"context"
 	"errors"
-	"math"
 	"sort"
 	"strings"
 
@@ -80,17 +79,6 @@ func buildOBTenantApiType(nn types.NamespacedName, p *param.CreateOBTenantParam)
 	if err != nil {
 		return nil, oberr.NewBadRequest("invalid log disk size: " + err.Error())
 	}
-	var maxIops, minIops int
-	if p.UnitConfig.MaxIops > math.MaxInt32 {
-		maxIops = math.MaxInt32
-	} else {
-		maxIops = int(p.UnitConfig.MaxIops)
-	}
-	if p.UnitConfig.MinIops > math.MaxInt32 {
-		minIops = math.MaxInt32
-	} else {
-		minIops = int(p.UnitConfig.MinIops)
-	}
 
 	t.Spec.Pools = make([]v1alpha1.ResourcePoolSpec, 0, len(p.Pools))
 	for i := range p.Pools {
@@ -110,8 +98,8 @@ func buildOBTenantApiType(nn types.NamespacedName, p *param.CreateOBTenantParam)
 			MemorySize:  memorySize,
 			MinCPU:      cpuCount,
 			LogDiskSize: logDiskSize,
-			MaxIops:     maxIops,
-			MinIops:     minIops,
+			MaxIops:     p.UnitConfig.MaxIops,
+			MinIops:     p.UnitConfig.MinIops,
 			IopsWeight:  p.UnitConfig.IopsWeight,
 		}
 		t.Spec.Pools = append(t.Spec.Pools, apiPool)
@@ -564,17 +552,6 @@ func PatchTenant(ctx context.Context, nn types.NamespacedName, p *param.PatchTen
 		if err != nil {
 			return nil, oberr.NewBadRequest("invalid log disk size: " + err.Error())
 		}
-		var maxIops, minIops int
-		if p.UnitConfig.UnitConfig.MaxIops > math.MaxInt32 {
-			maxIops = math.MaxInt32
-		} else {
-			maxIops = int(p.UnitConfig.UnitConfig.MaxIops)
-		}
-		if p.UnitConfig.UnitConfig.MinIops > math.MaxInt32 {
-			minIops = math.MaxInt32
-		} else {
-			minIops = int(p.UnitConfig.UnitConfig.MinIops)
-		}
 
 		for _, pool := range p.UnitConfig.Pools {
 			for i := range tenant.Spec.Pools {
@@ -586,8 +563,8 @@ func PatchTenant(ctx context.Context, nn types.NamespacedName, p *param.PatchTen
 						MemorySize:  memorySize,
 						MinCPU:      cpuCount,
 						IopsWeight:  p.UnitConfig.UnitConfig.IopsWeight,
-						MaxIops:     maxIops,
-						MinIops:     minIops,
+						MaxIops:     p.UnitConfig.UnitConfig.MaxIops,
+						MinIops:     p.UnitConfig.UnitConfig.MinIops,
 						LogDiskSize: logDiskSize,
 					}
 					break

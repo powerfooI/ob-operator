@@ -672,8 +672,8 @@ func (m *OBTenantManager) buildUnitConfigV4FromDB(zone string, tenantID int64) (
 						}
 						unitConfig.MemorySize = *kuberesource.NewQuantity(unitConifg.MemorySize, kuberesource.DecimalSI)
 						unitConfig.LogDiskSize = *kuberesource.NewQuantity(unitConifg.LogDiskSize, kuberesource.DecimalSI)
-						unitConfig.MaxIops = int(unitConifg.MaxIops)
-						unitConfig.MinIops = int(unitConifg.MinIops)
+						unitConfig.MaxIops = unitConifg.MaxIops
+						unitConfig.MinIops = unitConifg.MinIops
 						unitConfig.IopsWeight = int(unitConifg.IopsWeight)
 					}
 				}
